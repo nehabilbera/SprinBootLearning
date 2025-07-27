@@ -1,8 +1,8 @@
-package com.neha.ToDoList.Controller;
+package com.neha.ToDoList.controller;
 
 
-import com.neha.ToDoList.Model.ApiResponse;
-import com.neha.ToDoList.Model.Task;
+import com.neha.ToDoList.model.ApiResponse;
+import com.neha.ToDoList.model.Task;
 import org.springframework.web.bind.annotation.*;
 
 

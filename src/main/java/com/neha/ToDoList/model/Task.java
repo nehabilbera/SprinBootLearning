@@ -1,4 +1,4 @@
-package com.neha.ToDoList.Model;
+package com.neha.ToDoList.model;
 
 import java.util.Date;
 
