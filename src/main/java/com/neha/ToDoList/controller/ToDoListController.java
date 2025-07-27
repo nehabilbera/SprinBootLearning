@@ -66,9 +66,19 @@ public class ToDoListController {
         tasks.remove(id-1);
         String getTaskByIdMsg = "Delete Task having Id "+id;
 //        ApiResponse<Task> deleteResponseById = new ApiResponse<>(deletedTask, getTaskByIdMsg);
-        
+
 //        ApiResponse<Task> deleteResponseById = new ApiResponse<>(deletedTask, getTaskByIdMsg, new Date(), "Success");
 //        return deleteResponseById;
         return ApiResponse.success(deletedTask, getTaskByIdMsg);
+    }
+
+    @PutMapping("tasks/{id}")
+    public ApiResponse<Task> updateTask(@PathVariable int id, @RequestBody Task updatedTask){
+        if(id<=0 || id>tasks.size()){
+            return ApiResponse.error("Task with ID "+id+" is not found");
+        }
+        Task newTask = new Task(updatedTask.name(),id,new Date(),updatedTask.isDone());
+        tasks.set(id-1, newTask);
+        return ApiResponse.success(newTask, "Task updated Successfully");
     }
 }
