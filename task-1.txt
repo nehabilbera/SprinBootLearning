@@ -1,0 +1,56 @@
+package com.charitra.TodoList;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+
+Create the following methods
+GET -> to return list of all tasks
+POST -> add a new task
+
+Task should be of the following format:
+{
+  "name": string,
+  "id": integer,
+  "deadline": date,
+  "isDone": boolean
+}
+
+Example:
+{
+  "name": "Task1",
+  "id": 1,
+  "deadline": "2022-12-12",
+  "isDone": false
+}
+ */
+@RestController
+public class TodoListController {
+  // Operations (CRUD)
+  // RETRIEVE ALL TASKS - R -> GET -> /retrieveAllTasks ()
+  // ADD TASK - C -> POST -> /addTask
+  // DELETE TASK - D -> DELETE/POST -> /deleteTask
+  // UPDATE TASKS (SET TIME/DEADLINE, UPDATE NAME, etc.) - U -> PATCH/PUT -> /setDeadline
+
+  // CHECK COMPLETE TASKS
+
+  List<String> tasks = new ArrayList<>();
+
+  @GetMapping("/getTasks")
+  public List getAllTasks() {
+    return tasks;
+  }
+
+  @PostMapping("/addTask")
+  public String addTask() {
+    tasks.add("string");
+    return "task added successfully.";
+  }
+
+//  @DeleteMapping("/deleteTask")
+//  @RequestMapping(method = {RequestMethod.PUT})
+}
+
