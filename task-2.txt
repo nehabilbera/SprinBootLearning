@@ -1,0 +1,22 @@
+1. couting without counter variable.
+2. Model, Controller, Service, Exception
+3. api naming rules
+4. http method + url name makes a unique request method
+5. PathVariables and RequestBody
+6. Custom ApiResponse using Generic classes
+7. Exception handling in Spring Boot
+8. Records
+9. best practices of coding -> use meaningful names otherwise code fatega
+10. POJO use
+11. final keyword
+12. best practices for returning response
+
+
+
+HW:
+1. try to make ApiResponse using Record following all the current logic.
+2. Custom ApiResponse for errors with status = error in GlobalExceptionHandler logic
+3. create different branches for each day -> day1, day2, etc.
+4. use only git commands, and dont use any tool like vscode or GitHub desktop. (u can take help from chatgpt or internet or also note it down on copy, but understand everything).
+5. add me as collaborator so that i can test your progress.
+6. Read spring boot logs, and understand how to debug.
