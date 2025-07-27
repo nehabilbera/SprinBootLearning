@@ -1,0 +1,61 @@
+package com.neha.ToDoList.Controller;
+
+
+import com.neha.ToDoList.Model.ApiResponse;
+import com.neha.ToDoList.Model.Task;
+import org.springframework.web.bind.annotation.*;
+
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+
+@RestController
+public class ToDoListController {
+
+    List<Task> tasks = new ArrayList<>();
+
+    @GetMapping("/tasks")
+    public ApiResponse<List<Task>> getTaskLists(){
+//        ApiResponse<List<Task>> getResponse = new ApiResponse<>(tasks, "Task retrived successfully.");
+        ApiResponse<List<Task>> getResponse = new ApiResponse<>(tasks, "Task retrived successfully.", new Date(), "Success");
+        return getResponse;
+    }
+
+    @PostMapping("/tasks")
+    public ApiResponse<Task> addTask(@RequestBody Task task){
+        int id = tasks.size()+1;
+        Task newTask = new Task(task.name()+id, id, new Date(), task.isDone());
+        tasks.add(newTask);
+//        ApiResponse<Task> addResponse = new ApiResponse<>(newTask, "Task Successfully Added!");
+        ApiResponse<Task> addResponse = new ApiResponse<>(newTask, "Task Successfully Added!", new Date(), "Success");
+        return addResponse;
+    }
+
+    @GetMapping("/tasks/{id}")
+    public ApiResponse<Task> getTask(@PathVariable int id){
+        if(id<=0 || id>tasks.size()){
+//            return new ApiResponse<>(null, "Task with ID " + id + " not found");
+            return new ApiResponse<>(null, "Task with ID " + id + " not found", new Date(), "Error");
+        }
+        String getTaskByIdMsg = "Task by Id "+id;
+//        ApiResponse<Task> getResponseById = new ApiResponse<>(tasks.get(id-1), getTaskByIdMsg);
+        ApiResponse<Task> getResponseById = new ApiResponse<>(tasks.get(id-1), getTaskByIdMsg, new Date(), "Success");
+        return getResponseById;
+    }
+
+    @DeleteMapping("tasks/{id}")
+    public ApiResponse<Task> deleteTask(@PathVariable int id){
+        if(id<=0 || id>tasks.size()){
+//            return new ApiResponse<>(null, "Task with ID " + id + " not found");
+            return new ApiResponse<>(null, "Task with ID " + id + " not found", new Date(), "Error");
+        }
+        Task deletedTask = tasks.get(id-1);
+        tasks.remove(id-1);
+        String getTaskByIdMsg = "Delete Task having Id "+id;
+//        ApiResponse<Task> deleteResponseById = new ApiResponse<>(deletedTask, getTaskByIdMsg);
+        ApiResponse<Task> deleteResponseById = new ApiResponse<>(deletedTask, getTaskByIdMsg, new Date(), "Success");
+        return deleteResponseById;
+    }
+}
