@@ -1,0 +1,5 @@
+1. create two static methods in ApiResponse for generating success and error responses respectively so that we need to just pass message and data, other things will be handled by those methods.
+2. implement delete and put methods. also check if these operations can be done in more optimal way.
+3. create a taskservice to perform task operations and use it in the controller.
+4. create exception package, with a TaskNotFoundException. You have to throw this exception when a task is not found in the service.
+5. create multiple taskservice that can be used to perform operations based on different approaches (optional).
