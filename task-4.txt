@@ -1,0 +1,4 @@
+1. Services : hashmap, list, set -> use them in controller
+2. Custom Exception
+3. play with Ids
+4. for GitHub, use IntelliJ's command line rather than vscode or command line
