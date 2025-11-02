@@ -1,0 +1,5 @@
+1. Batch create tasks
+2. Batch update tasks
+3. Search task features
+4. Sort task based on name/isDone/deadline features.
+5. Filter task based on name/isDone/deadline features.

@@ -1,5 +1,8 @@
 package com.neha.ToDoList.controller;
 
+import com.neha.ToDoList.exception.InvalidTaskException;
+import com.neha.ToDoList.exception.TaskNotFoundException;
+import com.neha.ToDoList.model.ApiResponse;
 import com.neha.ToDoList.model.Task;
 import com.neha.ToDoList.service.ToDoServiceListImpl;
 import com.neha.ToDoList.service.ToDoServiceMapImpl;
@@ -10,37 +13,58 @@ import java.util.List;
 @RestController
 public class ToDoListController {
 
-//    ToDoServiceListImpl toDoServiceListImpl = new ToDoServiceListImpl();
-    ToDoServiceMapImpl toDoServiceMapImpl = new ToDoServiceMapImpl();
+//    private ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
+    private ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
 
     @GetMapping("/tasks")
-    public List<Task> getTaskLists() {
-//        return toDoServiceListImpl.getTaskLists();
-        return toDoServiceMapImpl.getTaskLists();
+    public ApiResponse<List<Task>> getTaskLists() {
+        return ApiResponse.success(toDoService.getTaskLists(), "Retrieved tasks successfully");
     }
 
     @PostMapping("/tasks")
-    public Task addTask(@RequestBody Task task) {
-//        return toDoServiceListImpl.addTask(task);
-        return toDoServiceMapImpl.addTask(task);
+    public ApiResponse<List<Task>> addBatchTask(@RequestBody List<Task> task) {
+        return ApiResponse.success(toDoService.addBatchTask(task), "Added tasks successfully");
     }
 
     @GetMapping("/tasks/{id}")
-    public Task getTask(@PathVariable int id) {
-//        return toDoServiceListImpl.getTask(id);
-        return toDoServiceMapImpl.getTask(id);
+    public ApiResponse<Task> getTask(@PathVariable int id) {
+        try{
+            return ApiResponse.success(toDoService.getTask(id), "Task with Id-"+id+" retrieve successfully");
+        }
+        catch (InvalidTaskException | TaskNotFoundException e){
+            return ApiResponse.error(e.getMessage());
+        }
     }
 
     @DeleteMapping("tasks/{id}")
-    public Task deleteTask(@PathVariable int id) {
-//        return toDoServiceListImpl.deleteTask(id);
-        return toDoServiceMapImpl.deleteTask(id);
+    public ApiResponse<Task> deleteTask(@PathVariable int id) {
+        try{
+            return ApiResponse.success(toDoService.deleteTask(id), "Task with Id-"+id+" delete successfully");
+        }
+        catch (InvalidTaskException | TaskNotFoundException e){
+            return ApiResponse.error(e.getMessage());
+        }
     }
 
     @PutMapping("tasks/{id}")
-    public Task updateTask(@PathVariable int id, @RequestBody Task updatedTask) {
-//        return toDoServiceListImpl.updateTask(id, updatedTask);
-        return toDoServiceMapImpl.updateTask(id, updatedTask);
+    public ApiResponse<Task> updateTask(@PathVariable int id, @RequestBody Task updatedTask) {
+        try{
+            return ApiResponse.success(toDoService.updateTask(id, updatedTask), "Task with Id-"+id+" update successfully");
+        }
+        catch (InvalidTaskException | TaskNotFoundException e){
+            return ApiResponse.error(e.getMessage());
+        }
     }
+
+    @PutMapping("tasks")
+    public ApiResponse<List<Task>> updateBatchTask(@RequestBody List<Task> updatedTask) {
+        try{
+            return ApiResponse.success(toDoService.updateBatchTask(updatedTask), "Tasks updated successfully");
+        }
+        catch (InvalidTaskException | TaskNotFoundException e){
+            return ApiResponse.error(e.getMessage());
+        }
+    }
+
 
 }

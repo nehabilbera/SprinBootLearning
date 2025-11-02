@@ -1,15 +1,15 @@
 package com.neha.ToDoList.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 //method-1 ------ Task is a POJO class
     public class Task {
         private String name;
         private int id;
-        private Date deadline;
+        private LocalDate deadline;
         private Boolean isDone;
 
-        public Task(String name, int id, Date deadline, Boolean isDone) {
+        public Task(String name, int id, LocalDate deadline, Boolean isDone) {
             this.name = name;
             this.id = id;
             this.deadline = deadline;
@@ -32,11 +32,11 @@ import java.util.Date;
             this.id = id;
         }
 
-        public Date getDeadline() {
+        public LocalDate getDeadline() {
             return deadline;
         }
 
-        public void setDeadline(Date deadline) {
+        public void setDeadline(LocalDate deadline) {
             this.deadline = deadline;
         }
 
@@ -52,4 +52,4 @@ import java.util.Date;
 
 
 //method-2 ----- Task is a record having no getter and setter
-//public record Task(String name, int id, Date deadline, Boolean isDone) {}
+//public record Task(String name, int id, LocalDate deadline, Boolean isDone) {}
