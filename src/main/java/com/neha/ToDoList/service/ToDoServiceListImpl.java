@@ -1,17 +1,22 @@
 package com.neha.ToDoList.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.neha.ToDoList.utils.DateMethods.dateComparisonMethod;
 
 
 @Service
 public class ToDoServiceListImpl {
-    private List<Task> tasks = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
     private int count = 0;
 
     public List<Task> getTaskLists(){
@@ -105,7 +110,7 @@ public class ToDoServiceListImpl {
                 throw new InvalidTaskException("Task Id should be positive");
             }
 
-            Boolean check = false;
+            boolean check = false;
             Task newTask = null;
             int ind = -1;
             for(int i = 0; i < tasks.size(); i++){
@@ -117,10 +122,18 @@ public class ToDoServiceListImpl {
                     break;
                 }
             }
-            if(check == true){
-                if (t.getName() != null) newTask.setName(t.getName());
-                if (t.getDeadline() != null) newTask.setDeadline(t.getDeadline());
-                if (t.getIsDone() != null) newTask.setIsDone(t.getIsDone());
+            if(check){
+                if (t.getName() != null && !t.getName().isEmpty())
+                    newTask.setName(t.getName());
+
+                if (t.getDeadline() != null)
+                    newTask.setDeadline(t.getDeadline());
+
+                if (t.getIsDone() != null)
+                    newTask.setIsDone(t.getIsDone());
+
+                tasks.set(ind, newTask);
+
                 tasks.set(ind, newTask);
             }
             else{
@@ -129,5 +142,48 @@ public class ToDoServiceListImpl {
         }
 
         return updatedTask;
+    }
+
+    public List<Task> search(String name){
+        List<Task> searchedTasks = new ArrayList<>();
+        for(Task t : tasks){
+            if(t.getName().toLowerCase().contains(name.toLowerCase())){
+                searchedTasks.add(t);
+            }
+        }
+        return searchedTasks;
+    }
+
+    public List<Task> sortByName(){
+        List<Task> sortedTasks = new ArrayList<>(tasks);
+        sortedTasks.sort(Comparator.comparing(Task::getName));
+        return sortedTasks;
+    }
+
+    public List<Task> sortByDeadLine(){
+        List<Task> sortedTasks = new ArrayList<>(tasks);
+        sortedTasks.sort(Comparator.comparing(Task::getDeadline));
+        return sortedTasks;
+    }
+
+    public List<Task> sortByIsDone(){
+        List<Task> sortedTasks = new ArrayList<>(tasks);
+        sortedTasks.sort(Comparator.comparing(Task::getIsDone));
+        return sortedTasks;
+    }
+
+    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone){
+        List<Task> filteredTasks = new ArrayList<>();
+        for(Task t : tasks){
+            Boolean namePart = (name==null) || (t.getName().trim().toLowerCase().contains(name.toLowerCase().trim()));
+          Boolean deadLinePart = (deadLine==null) || dateComparisonMethod(t.getDeadline(), deadLine);
+            Boolean isDonePart = (isDone==null) || (t.getIsDone().equals(isDone));
+
+            if(namePart && deadLinePart && isDonePart){
+                filteredTasks.add(t);
+            }
+        }
+
+        return filteredTasks;
     }
 }

@@ -1,15 +1,20 @@
+
 package com.neha.ToDoList.service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import static com.neha.ToDoList.utils.DateMethods.dateComparisonMethod;
 
 
 @Service
@@ -91,4 +96,9 @@ public class ToDoServiceMapImpl {
         return updatedTasks;
     }
 
+    public List<Task> search(String name){
+        List<Task> searchedTasks = new ArrayList<>();
+        tasks.values().stream().filter(t-> (t.getName()!=null) && t.getName().toLowerCase().trim().contains(name.toLowerCase().trim()));
+        return searchedTasks;
+    }
 }

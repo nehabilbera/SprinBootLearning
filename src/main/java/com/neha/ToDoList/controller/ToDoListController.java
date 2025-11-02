@@ -1,20 +1,22 @@
+
 package com.neha.ToDoList.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.neha.ToDoList.service.ToDoServiceListImpl;
+import org.springframework.web.bind.annotation.*;
 
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.ApiResponse;
 import com.neha.ToDoList.model.Task;
-import com.neha.ToDoList.service.ToDoServiceListImpl;
-import com.neha.ToDoList.service.ToDoServiceMapImpl;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class ToDoListController {
 
-//    private ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
-    private ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
+    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
+//    private ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
 
     @GetMapping("/tasks")
     public ApiResponse<List<Task>> getTaskLists() {
@@ -66,5 +68,30 @@ public class ToDoListController {
         }
     }
 
+    @GetMapping("tasks/search")
+    public ApiResponse<List<Task>> search(@RequestParam String name){
+        return ApiResponse.success(toDoService.search(name), "Retrieved searched tasks successfully");
+    }
 
+    @GetMapping("tasks/sortByName")
+    public List<Task> sortByName(){
+        return toDoService.sortByName();
+    }
+
+    @GetMapping("tasks/sortByDeadLine")
+    public List<Task> sortByDeadLine(){
+        return toDoService.sortByDeadLine();
+    }
+
+    @GetMapping("tasks/sortByIsDone")
+    public List<Task> sortByIsDone(){
+        return toDoService.sortByIsDone();
+    }
+
+    @GetMapping("tasks/filter")
+    public Object filter(@RequestParam(required = false) String name,
+                         @RequestParam(required = false) LocalDate deadLine,
+                         @RequestParam(required = false) Boolean isDone){
+        return ApiResponse.success(toDoService.filter(name, deadLine, isDone), "Get filtered tasks successfully");
+    }
 }
