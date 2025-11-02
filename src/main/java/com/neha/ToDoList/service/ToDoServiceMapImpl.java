@@ -18,14 +18,16 @@ import static com.neha.ToDoList.utils.DateMethods.dateComparisonMethod;
 
 
 @Service
-public class ToDoServiceMapImpl {
+public class ToDoServiceMapImpl implements ToDoService {
     HashMap<Integer, Task> tasks = new HashMap<>();
     private int count = 0;
 
+    @Override
     public List<Task> getTaskLists(){
         return tasks.values().stream().toList();
     }
 
+    @Override
     public List<Task> addBatchTask(List<Task> new_tasks){
         for(Task t : new_tasks){
             int id = ++count;
@@ -39,6 +41,7 @@ public class ToDoServiceMapImpl {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Task getTask(int id) throws TaskNotFoundException, InvalidTaskException {
         if(id<=0){
             throw new InvalidTaskException("Task Id should be positive");
@@ -50,6 +53,7 @@ public class ToDoServiceMapImpl {
         return task;
     }
 
+    @Override
     public Task deleteTask(int id) throws TaskNotFoundException, InvalidTaskException {
         if(id<=0) {
             throw new InvalidTaskException("Task Id should be positive");
@@ -61,6 +65,7 @@ public class ToDoServiceMapImpl {
         return deletedTask;
     }
 
+    @Override
     public Task updateTask(int id, Task updatedTask) throws TaskNotFoundException, InvalidTaskException {
         if(id<=0){
             throw new InvalidTaskException("Task Id should be positive");
@@ -77,6 +82,7 @@ public class ToDoServiceMapImpl {
         return newTask;
     }
 
+    @Override
     public List<Task> updateBatchTask(List<Task> updatedTasks) throws InvalidTaskException, TaskNotFoundException {
 
         for (Task t : updatedTasks) {
@@ -96,9 +102,51 @@ public class ToDoServiceMapImpl {
         return updatedTasks;
     }
 
+    @Override
     public List<Task> search(String name){
         List<Task> searchedTasks = new ArrayList<>();
         tasks.values().stream().filter(t-> (t.getName()!=null) && t.getName().toLowerCase().trim().contains(name.toLowerCase().trim()));
         return searchedTasks;
+    }
+
+    @Override
+    public List<Task> sort(String field, int desc){
+        List<Task> sortedTasks = new ArrayList<>(tasks.values());
+        if(field.equals("deadLine")){
+            if(desc==0) {
+                sortedTasks.sort(Comparator.comparing(Task::getDeadline));
+                return sortedTasks;
+            }
+            else {
+                sortedTasks.sort(Comparator.comparing(Task::getDeadline).reversed());
+                return sortedTasks;
+            }
+        }
+        else{
+            if(desc==0){
+                sortedTasks.sort(Comparator.comparing(Task::getName));
+                return sortedTasks;
+            }
+            else {
+                sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
+                return sortedTasks;
+            }
+        }
+    }
+
+    @Override
+    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone){
+        List<Task> filteredTasks = new ArrayList<>();
+        for(Task t : tasks.values()){
+            Boolean namePart = (name==null) || (t.getName().trim().toLowerCase().contains(name.toLowerCase().trim()));
+            Boolean deadLinePart = (deadLine==null) || dateComparisonMethod(t.getDeadline(), deadLine);
+            Boolean isDonePart = (isDone==null) || (t.getIsDone().equals(isDone));
+
+            if(namePart && deadLinePart && isDonePart){
+                filteredTasks.add(t);
+            }
+        }
+
+        return filteredTasks;
     }
 }

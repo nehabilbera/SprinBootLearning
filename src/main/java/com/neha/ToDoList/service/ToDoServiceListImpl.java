@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -13,16 +14,17 @@ import com.neha.ToDoList.model.Task;
 
 import static com.neha.ToDoList.utils.DateMethods.dateComparisonMethod;
 
-
 @Service
-public class ToDoServiceListImpl {
+public class ToDoServiceListImpl implements ToDoService{
     private final List<Task> tasks = new ArrayList<>();
     private int count = 0;
 
+    @Override
     public List<Task> getTaskLists(){
         return tasks;
     }
 
+    @Override
     public List<Task> addBatchTask(List<Task> new_tasks){
 
         for(Task t : new_tasks){
@@ -34,6 +36,7 @@ public class ToDoServiceListImpl {
         return tasks.subList(tasks.size()-new_tasks.size(), tasks.size());
     }
 
+    @Override
     public Task getTask(int id) throws InvalidTaskException, TaskNotFoundException {
         if(id<=0){
             throw new InvalidTaskException("Task Id should be positive");
@@ -53,6 +56,7 @@ public class ToDoServiceListImpl {
         return task;
     }
 
+    @Override
     public Task deleteTask(int id) throws InvalidTaskException, TaskNotFoundException {
         if(id<=0) {
             throw new InvalidTaskException("Task Id should be positive");
@@ -75,6 +79,7 @@ public class ToDoServiceListImpl {
         return deletedTask;
     }
 
+    @Override
     public Task updateTask(int id, Task updatedTask) throws InvalidTaskException, TaskNotFoundException {
         if(id<=0){
             throw new InvalidTaskException("Task Id should be positive");
@@ -102,6 +107,7 @@ public class ToDoServiceListImpl {
         return newTask;
     }
 
+    @Override
     public List<Task> updateBatchTask(List<Task> updatedTask) throws InvalidTaskException, TaskNotFoundException {
 
         for(Task t : updatedTask){
@@ -133,8 +139,6 @@ public class ToDoServiceListImpl {
                     newTask.setIsDone(t.getIsDone());
 
                 tasks.set(ind, newTask);
-
-                tasks.set(ind, newTask);
             }
             else{
                 throw new TaskNotFoundException("Task not found with id");
@@ -144,6 +148,7 @@ public class ToDoServiceListImpl {
         return updatedTask;
     }
 
+    @Override
     public List<Task> search(String name){
         List<Task> searchedTasks = new ArrayList<>();
         for(Task t : tasks){
@@ -154,9 +159,10 @@ public class ToDoServiceListImpl {
         return searchedTasks;
     }
 
+    @Override
     public List<Task> sort(String field, int desc){
         List<Task> sortedTasks = new ArrayList<>(tasks);
-        if(field.equals("deadLine")){
+        if(Objects.equals(field, "deadLine")){
             if(desc==0) {
                 sortedTasks.sort(Comparator.comparing(Task::getDeadline));
                 return sortedTasks;
@@ -178,6 +184,7 @@ public class ToDoServiceListImpl {
         }
     }
 
+    @Override
     public List<Task> filter(String name, LocalDate deadLine, Boolean isDone){
         List<Task> filteredTasks = new ArrayList<>();
         for(Task t : tasks){

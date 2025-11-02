@@ -4,7 +4,9 @@ package com.neha.ToDoList.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.neha.ToDoList.service.ToDoService;
 import com.neha.ToDoList.service.ToDoServiceListImpl;
+import com.neha.ToDoList.service.ToDoServiceMapImpl;
 import org.springframework.web.bind.annotation.*;
 
 import com.neha.ToDoList.exception.InvalidTaskException;
@@ -15,8 +17,10 @@ import com.neha.ToDoList.model.Task;
 @RestController
 public class ToDoListController {
 
-    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
-//    private ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
+//    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
+//    private final ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
+    private final ToDoService toDoService = new ToDoServiceListImpl();
+//    private final ToDoService toDoService = new ToDoServiceListImpl()
 
     @GetMapping("/tasks")
     public ApiResponse<List<Task>> getTaskLists() {
