@@ -154,22 +154,28 @@ public class ToDoServiceListImpl {
         return searchedTasks;
     }
 
-    public List<Task> sortByName(){
+    public List<Task> sort(String field, int desc){
         List<Task> sortedTasks = new ArrayList<>(tasks);
-        sortedTasks.sort(Comparator.comparing(Task::getName));
-        return sortedTasks;
-    }
-
-    public List<Task> sortByDeadLine(){
-        List<Task> sortedTasks = new ArrayList<>(tasks);
-        sortedTasks.sort(Comparator.comparing(Task::getDeadline));
-        return sortedTasks;
-    }
-
-    public List<Task> sortByIsDone(){
-        List<Task> sortedTasks = new ArrayList<>(tasks);
-        sortedTasks.sort(Comparator.comparing(Task::getIsDone));
-        return sortedTasks;
+        if(field.equals("deadLine")){
+            if(desc==0) {
+                sortedTasks.sort(Comparator.comparing(Task::getDeadline));
+                return sortedTasks;
+            }
+            else {
+                sortedTasks.sort(Comparator.comparing(Task::getDeadline).reversed());
+                return sortedTasks;
+            }
+        }
+        else{
+            if(desc==0){
+                sortedTasks.sort(Comparator.comparing(Task::getName));
+                return sortedTasks;
+            }
+            else {
+                sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
+                return sortedTasks;
+            }
+        }
     }
 
     public List<Task> filter(String name, LocalDate deadLine, Boolean isDone){
