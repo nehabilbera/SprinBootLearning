@@ -15,6 +15,7 @@ import com.neha.ToDoList.model.ApiResponse;
 import com.neha.ToDoList.model.Task;
 
 @RestController
+@RequestMapping("/tasks")
 public class ToDoListController {
 
 //    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
@@ -22,17 +23,17 @@ public class ToDoListController {
     private final ToDoService toDoService = new ToDoServiceListImpl();
 //    private final ToDoService toDoService = new ToDoServiceListImpl()
 
-    @GetMapping("/tasks")
+    @GetMapping
     public ApiResponse<List<Task>> getTaskLists() {
         return ApiResponse.success(toDoService.getTaskLists(), "Retrieved tasks successfully");
     }
 
-    @PostMapping("/tasks")
+    @PostMapping
     public ApiResponse<List<Task>> addBatchTask(@RequestBody List<Task> task) {
         return ApiResponse.success(toDoService.addBatchTask(task), "Added tasks successfully");
     }
 
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     public ApiResponse<Task> getTask(@PathVariable int id) {
         try{
             return ApiResponse.success(toDoService.getTask(id), "Task with Id-"+id+" retrieve successfully");
@@ -42,7 +43,7 @@ public class ToDoListController {
         }
     }
 
-    @DeleteMapping("tasks/{id}")
+    @DeleteMapping("/{id}")
     public ApiResponse<Task> deleteTask(@PathVariable int id) {
         try{
             return ApiResponse.success(toDoService.deleteTask(id), "Task with Id-"+id+" delete successfully");
@@ -52,7 +53,7 @@ public class ToDoListController {
         }
     }
 
-    @PutMapping("tasks/{id}")
+    @PutMapping("/{id}")
     public ApiResponse<Task> updateTask(@PathVariable int id, @RequestBody Task updatedTask) {
         try{
             return ApiResponse.success(toDoService.updateTask(id, updatedTask), "Task with Id-"+id+" update successfully");
@@ -62,7 +63,7 @@ public class ToDoListController {
         }
     }
 
-    @PutMapping("tasks")
+    @PutMapping
     public ApiResponse<List<Task>> updateBatchTask(@RequestBody List<Task> updatedTask) {
         try{
             return ApiResponse.success(toDoService.updateBatchTask(updatedTask), "Tasks updated successfully");
@@ -72,17 +73,17 @@ public class ToDoListController {
         }
     }
 
-    @GetMapping("tasks/search")
+    @GetMapping("/search")
     public ApiResponse<List<Task>> search(@RequestParam String name){
         return ApiResponse.success(toDoService.search(name), "Retrieved searched tasks successfully");
     }
 
-    @GetMapping("tasks/sort")
+    @GetMapping("/sort")
     public ApiResponse<List<Task>> sort(@RequestParam(required = false, defaultValue = "deadLine") String field, @RequestParam(required = false, defaultValue = "0") int desc){
         return ApiResponse.success(toDoService.sort(field, desc), "Tasks sort Successfully");
     }
 
-    @GetMapping("tasks/filter")
+    @GetMapping("/filter")
     public ApiResponse<List<Task>> filter(@RequestParam(required = false) String name,
                                           @RequestParam(required = false) LocalDate deadLine,
                                           @RequestParam(required = false) Boolean isDone){
