@@ -1,0 +1,3 @@
+1. Use sort by name and deadline ascending or descending order
+2. Make interfaces --> ToDoService interface
+3. make a date method under utils
