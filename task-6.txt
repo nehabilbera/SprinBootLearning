@@ -1,3 +1,5 @@
 1. Use sort by name and deadline ascending or descending order
 2. Make interfaces --> ToDoService interface
 3. make a date method under utils
+4. Use Request Mapping
+5. Use stream in place of for loop
