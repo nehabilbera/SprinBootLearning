@@ -20,8 +20,8 @@ public class ToDoListController {
 
 //    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
 //    private final ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
-    private final ToDoService toDoService = new ToDoServiceListImpl();
-//    private final ToDoService toDoService = new ToDoServiceListImpl()
+//    private final ToDoService toDoService = new ToDoServiceListImpl();
+    private final ToDoService toDoService = new ToDoServiceMapImpl();
 
     @GetMapping
     public ApiResponse<List<Task>> getTaskLists() {

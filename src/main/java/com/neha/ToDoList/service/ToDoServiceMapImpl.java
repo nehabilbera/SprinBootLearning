@@ -14,7 +14,7 @@ import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
 
-import static com.neha.ToDoList.utils.DateMethods.dateComparisonMethod;
+import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 
 @Service
@@ -139,7 +139,7 @@ public class ToDoServiceMapImpl implements ToDoService {
         List<Task> filteredTasks = new ArrayList<>();
         for(Task t : tasks.values()){
             Boolean namePart = (name==null) || (t.getName().trim().toLowerCase().contains(name.toLowerCase().trim()));
-            Boolean deadLinePart = (deadLine==null) || dateComparisonMethod(t.getDeadline(), deadLine);
+            Boolean deadLinePart = (deadLine==null) || compareDate(t.getDeadline(), deadLine);
             Boolean isDonePart = (isDone==null) || (t.getIsDone().equals(isDone));
 
             if(namePart && deadLinePart && isDonePart){
