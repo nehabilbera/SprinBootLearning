@@ -3,6 +3,8 @@ package com.neha.ToDoList.dao;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -12,11 +14,12 @@ import java.util.List;
 
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
-
+@Configuration
 public class ToDoDaoMySqlImpl implements ToDoDao{
     private static Connection conn;
 
     public ToDoDaoMySqlImpl() throws SQLException {
+        System.out.println("DAO mysql called.");
         if(conn == null){
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todolist", "root", "root");
             PreparedStatement ptst = conn.prepareStatement(

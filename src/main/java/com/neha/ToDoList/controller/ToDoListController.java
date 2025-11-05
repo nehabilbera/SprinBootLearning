@@ -9,6 +9,8 @@ import com.neha.ToDoList.service.ToDoService;
 import com.neha.ToDoList.service.ToDoServiceDaoImpl;
 import com.neha.ToDoList.service.ToDoServiceListImpl;
 import com.neha.ToDoList.service.ToDoServiceMapImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import com.neha.ToDoList.exception.InvalidTaskException;
@@ -21,13 +23,10 @@ import com.neha.ToDoList.model.Task;
 @RequestMapping("/tasks")
 public class ToDoListController {
 
-//    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
-//    private final ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
-//    private final ToDoService toDoService = new ToDoServiceListImpl();
-//    private final ToDoService toDoService = new ToDoServiceMapImpl();
-    private ToDoService toDoService = new ToDoServiceDaoImpl();
+    private final ToDoService toDoService;
 
-    public ToDoListController() throws SQLException {
+    public ToDoListController(ToDoService toDoService) throws SQLException{
+        this.toDoService=toDoService;
     }
 
     @GetMapping

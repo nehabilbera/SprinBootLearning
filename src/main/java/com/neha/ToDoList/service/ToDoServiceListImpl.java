@@ -15,6 +15,10 @@ import com.neha.ToDoList.model.Task;
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 public class ToDoServiceListImpl implements ToDoService{
+
+    public ToDoServiceListImpl(){
+        System.out.println("List Service called.");
+    }
     private final List<Task> tasks = new ArrayList<>();
     private int count = 0;
 

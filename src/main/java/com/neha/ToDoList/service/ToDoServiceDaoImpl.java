@@ -5,18 +5,22 @@ import com.neha.ToDoList.dao.ToDoDaoMySqlImpl;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-
+@Configuration
 public class ToDoServiceDaoImpl implements ToDoService{
 
-    ToDoDao toDoDao = new ToDoDaoMySqlImpl();
+    private ToDoDao toDoDao;
 
+    @Autowired
     public ToDoServiceDaoImpl() throws SQLException {
+        System.out.println("DAO Service called.");
+        this.toDoDao = new ToDoDaoMySqlImpl();
     }
 
     @Override
