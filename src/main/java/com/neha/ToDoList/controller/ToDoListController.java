@@ -21,14 +21,13 @@ import com.neha.ToDoList.model.Task;
 @RequestMapping("/tasks")
 public class ToDoListController {
 
-//    private final ToDoServiceListImpl toDoService = new ToDoServiceListImpl();
-//    private final ToDoServiceMapImpl toDoService = new ToDoServiceMapImpl();
-//    private final ToDoService toDoService = new ToDoServiceListImpl();
-//    private final ToDoService toDoService = new ToDoServiceMapImpl();
-    private ToDoService toDoService = new ToDoServiceDaoImpl();
+    private final ToDoService toDoService;
 
-    public ToDoListController() throws SQLException {
+    // Constructor dependencies injection
+    public ToDoListController(ToDoService toDoService) throws SQLException {
+        this.toDoService = toDoService;
     }
+
 
     @GetMapping
     public ApiResponse<List<Task>> getTaskLists() throws SQLException {

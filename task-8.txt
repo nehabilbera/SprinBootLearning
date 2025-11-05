@@ -1,0 +1,4 @@
+1. Constructor Dependencies injection
+2. Method Injection getter/setter
+3. Difference between @component and @service
+4. Bean Configuration
