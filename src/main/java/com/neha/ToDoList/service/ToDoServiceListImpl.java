@@ -14,7 +14,6 @@ import com.neha.ToDoList.model.Task;
 
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
-@Service
 public class ToDoServiceListImpl implements ToDoService{
     private final List<Task> tasks = new ArrayList<>();
     private int count = 0;
@@ -189,7 +188,7 @@ public class ToDoServiceListImpl implements ToDoService{
         List<Task> filteredTasks = new ArrayList<>();
         for(Task t : tasks){
             Boolean namePart = (name==null) || (t.getName().trim().toLowerCase().contains(name.toLowerCase().trim()));
-          Boolean deadLinePart = (deadLine==null) || compareDate(t.getDeadline(), deadLine);
+            Boolean deadLinePart = (deadLine==null) || compareDate(t.getDeadline(), deadLine);
             Boolean isDonePart = (isDone==null) || (t.getIsDone().equals(isDone));
 
             if(namePart && deadLinePart && isDonePart){

@@ -1,0 +1,3 @@
+1. Fix update tasks method
+2. sort and search in map service
+3. Make database connection

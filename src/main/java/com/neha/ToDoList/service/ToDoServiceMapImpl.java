@@ -17,7 +17,6 @@ import com.neha.ToDoList.model.Task;
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 
-@Service
 public class ToDoServiceMapImpl implements ToDoService {
     HashMap<Integer, Task> tasks = new HashMap<>();
     private int count = 0;

@@ -5,26 +5,27 @@ import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
+
 public interface ToDoService{
-    public List<Task> getTaskLists();
+    public List<Task> getTaskLists() throws SQLException;
 
-    public List<Task> addBatchTask(List<Task> new_tasks);
+    public List<Task> addBatchTask(List<Task> new_tasks) throws SQLException;
 
-    public Task getTask(int id) throws InvalidTaskException, TaskNotFoundException;
+    public Task getTask(int id) throws InvalidTaskException, TaskNotFoundException, SQLException;
 
-    public Task deleteTask(int id) throws InvalidTaskException, TaskNotFoundException;
+    public Task deleteTask(int id) throws InvalidTaskException, TaskNotFoundException, SQLException;
 
-    public Task updateTask(int id, Task updatedTask) throws InvalidTaskException, TaskNotFoundException;
+    public Task updateTask(int id, Task updatedTask) throws InvalidTaskException, TaskNotFoundException, SQLException;
 
-    public List<Task> updateBatchTask(List<Task> updatedTask) throws InvalidTaskException, TaskNotFoundException;
+    public List<Task> updateBatchTask(List<Task> updatedTask) throws InvalidTaskException, TaskNotFoundException, SQLException;
 
-    public List<Task> search(String name);
+    public List<Task> search(String name) throws SQLException;
 
-    public List<Task> sort(String field, int desc);
+    public List<Task> sort(String field, int desc) throws SQLException;
 
-    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone);
+    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException;
 }

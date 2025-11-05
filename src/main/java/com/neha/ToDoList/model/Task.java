@@ -1,5 +1,8 @@
 package com.neha.ToDoList.model;
 
+import org.springframework.cglib.core.Local;
+
+import java.sql.Date;
 import java.time.LocalDate;
 
 //method-1 ------ Task is a POJO class
@@ -16,7 +19,11 @@ import java.time.LocalDate;
             this.isDone = isDone;
         }
 
-        public String getName() {
+    public Task() {
+
+    }
+
+    public String getName() {
             return name;
         }
 

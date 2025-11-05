@@ -14,6 +14,7 @@ public class DateMethods {
     }
 
     public static Boolean compareDate(LocalDate date1, LocalDate date2){
+        if(date1==null || date2==null) return false;
         return date1.equals(date2);
     }
 }
