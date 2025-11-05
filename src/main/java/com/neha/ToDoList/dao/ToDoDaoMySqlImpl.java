@@ -99,7 +99,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
     @Override
     public Task updateTask(int id, Task updatedTask) throws InvalidTaskException, TaskNotFoundException, SQLException {
         Task t = getTask(id);
-        Task utask = updatedTask;
+        Task utask = new Task(updatedTask);
 
         if(updatedTask.getName()!=null){
             String query = "UPDATE tasks SET task_name=? WHERE task_id=?";
@@ -126,17 +126,18 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             psts.executeUpdate();
         }
         utask.setId(id);
-        return utask;
+        return getTask(id);
     }
 
     @Override
     public List<Task> updateBatchTask(List<Task> updatedTask) throws InvalidTaskException, TaskNotFoundException, SQLException {
         List<Task> ubtasks = new ArrayList<>();
-        Boolean check = false;
-        String query = "SELECT * FROM tasks WHERE task_id = ";
+
+        String query = "SELECT * FROM tasks WHERE task_id = ?";
         for(Task t : updatedTask){
             int id = t.getId();
-            PreparedStatement ptst = conn.prepareStatement(query+id);
+            PreparedStatement ptst = conn.prepareStatement(query);
+            ptst.setInt(1, id);
             ResultSet rs = ptst.executeQuery();
             if(!rs.next()){
                 throw new TaskNotFoundException("Task not found");
@@ -144,9 +145,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         }
 
         for(Task t : updatedTask){
-            int id = t.getId();
-            Task ut = new Task(t.getName(), t.getId(), t.getDeadline(), t.getIsDone());
-            ubtasks.add(updateTask(id, ut));
+            ubtasks.add(updateTask(t.getId(), t));
         }
         return ubtasks;
     }
@@ -171,11 +170,13 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         return serachedTasks;
     }
 
+    // todo: make it work for field = name and field = deadline, do not touch input data
     @Override
     public List<Task> sort(String field, int desc) throws SQLException {
+        // todo : add check condition of field and desc
         List<Task> sortedTasks = new ArrayList<>();
-        if (!field.equals("task_name") && !field.equals("task_deadLine")) {
-            field = "task_deadLine";
+        if (!field.equals("name") && !field.equals("deadLine")) {
+            field = "deadLine";
         }
 
         String direction = (desc == 1) ? "DESC" : "ASC";
@@ -200,8 +201,9 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
 
     @Override
     public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException {
-
+        //todo : add param conditions
         List<Task> filteredTasks = new ArrayList<>();
+
 
         if(name!=null && deadLine==null && isDone==null){
             String query = "SELECT * FROM tasks WHERE task_name LIKE ?";
@@ -321,7 +323,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             }
         }
         else{
-            throw new TaskNotFoundException("Task not found");
+            return getTaskLists();
         }
 
         return filteredTasks;
