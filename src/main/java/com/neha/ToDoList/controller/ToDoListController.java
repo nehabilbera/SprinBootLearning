@@ -82,8 +82,10 @@ public class ToDoListController {
         return ApiResponse.success(toDoService.search(name), "Retrieved searched tasks successfully");
     }
 
+    // todo: validate fields and request params
     @GetMapping("/sort")
     public ApiResponse<List<Task>> sort(@RequestParam(required = false, defaultValue = "deadLine") String field, @RequestParam(required = false, defaultValue = "0") int desc) throws SQLException {
+        // todo: add custom exc. invalid parameters
         return ApiResponse.success(toDoService.sort(field, desc), "Tasks sort Successfully");
     }
 
@@ -91,6 +93,7 @@ public class ToDoListController {
     public ApiResponse<List<Task>> filter(@RequestParam(required = false) String name,
                                           @RequestParam(required = false) LocalDate deadLine,
                                           @RequestParam(required = false) Boolean isDone) throws SQLException, TaskNotFoundException {
+        //todo : add param conditions
         return ApiResponse.success(toDoService.filter(name, deadLine, isDone), "Get filtered tasks successfully");
     }
 }

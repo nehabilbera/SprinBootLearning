@@ -59,11 +59,13 @@ public class ToDoServiceDaoImpl implements ToDoService{
 
     @Override
     public List<Task> sort(String field, int desc) throws SQLException {
+        // todo : add field condition
         return toDoDao.sort(field, desc);
     }
 
     @Override
     public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException {
+        //todo : add param conditions
         return toDoDao.filter(name, deadLine, isDone);
     }
 }
