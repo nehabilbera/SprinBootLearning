@@ -21,9 +21,8 @@ import com.neha.ToDoList.model.Task;
 @RequestMapping("/tasks")
 public class ToDoListController {
 
-    //Method Injection getter/setter
-    private ToDoService toDoService;
-    public void setToDoService(){
+    private final ToDoService toDoService;
+    public  ToDoListController(ToDoService toDoService) throws SQLException{
         this.toDoService = toDoService;
     }
 
