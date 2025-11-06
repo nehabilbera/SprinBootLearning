@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
-@Configuration
+
 public class ToDoDaoMySqlImpl implements ToDoDao{
     private static Connection conn;
 
