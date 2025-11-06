@@ -1,5 +1,7 @@
+
 package com.neha.ToDoList.dao;
 
+import com.neha.ToDoList.config.EnvVars;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -17,11 +19,14 @@ import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 public class ToDoDaoMySqlImpl implements ToDoDao{
     private static Connection conn;
+    private EnvVars env;
 
-    public ToDoDaoMySqlImpl() throws SQLException {
+    public ToDoDaoMySqlImpl(EnvVars env) throws SQLException {
+        this.env = env;
         System.out.println("DAO mysql called.");
+
         if(conn == null){
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/todolist", "root", "root");
+            conn = DriverManager.getConnection(env.getDbUrl(), env.getDbPassword(), env.getDbPassword());
             PreparedStatement ptst = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS tasks (" +
                             "task_id INT AUTO_INCREMENT PRIMARY KEY, " +

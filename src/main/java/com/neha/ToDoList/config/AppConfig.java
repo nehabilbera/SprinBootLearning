@@ -15,14 +15,21 @@ import java.sql.SQLException;
 
 @Configuration
 public class AppConfig {
-    @Primary
+
     @Bean
-    public ToDoDao toDoDao() throws SQLException {
-        return new ToDoDaoMySqlImpl();
+    @Primary
+    public EnvVars envVars(){
+        return new EnvVars();
     }
 
     @Bean
     @Primary
+    public ToDoDao toDoDao(EnvVars env) throws SQLException {
+        return new ToDoDaoMySqlImpl(env);
+    }
+
+    @Primary
+    @Bean
     public ToDoService toDoService(ToDoDao toDoDao) throws SQLException {
         return new ToDoServiceDaoImpl(toDoDao);
     }
