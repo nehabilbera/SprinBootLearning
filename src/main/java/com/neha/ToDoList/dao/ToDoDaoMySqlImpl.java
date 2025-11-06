@@ -5,10 +5,9 @@ import com.neha.ToDoList.config.EnvVars;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,14 +18,13 @@ import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 public class ToDoDaoMySqlImpl implements ToDoDao{
     private static Connection conn;
-    private EnvVars env;
+    private DataSource dataSource;
 
-    public ToDoDaoMySqlImpl(EnvVars env) throws SQLException {
-        this.env = env;
+    public ToDoDaoMySqlImpl(DataSource dataSource) throws SQLException {
+        this.dataSource = dataSource;
         System.out.println("DAO mysql called.");
-
         if(conn == null){
-            conn = DriverManager.getConnection(env.getDbUrl(), env.getDbPassword(), env.getDbPassword());
+            conn = dataSource.getConnection();
             PreparedStatement ptst = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS tasks (" +
                             "task_id INT AUTO_INCREMENT PRIMARY KEY, " +

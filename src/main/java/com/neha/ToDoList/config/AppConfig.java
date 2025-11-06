@@ -11,21 +11,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @Configuration
 public class AppConfig {
 
-    @Bean
-    @Primary
+    //@Bean
+    //@Primary
     public EnvVars envVars(){
         return new EnvVars();
     }
 
     @Bean
     @Primary
-    public ToDoDao toDoDao(EnvVars env) throws SQLException {
-        return new ToDoDaoMySqlImpl(env);
+    public ToDoDao toDoDao(DataSource dataSource) throws SQLException {
+        return new ToDoDaoMySqlImpl(dataSource);
     }
 
     @Primary
@@ -34,12 +35,12 @@ public class AppConfig {
         return new ToDoServiceDaoImpl(toDoDao);
     }
 
-    @Bean
+    //@Bean
     public ToDoService toDoService1(){
         return new ToDoServiceListImpl();
     }
 
-    @Bean
+    //@Bean
     public ToDoService toDoService2(){
         return new ToDoServiceMapImpl();
     }
