@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
-@Configuration
+
 public class ToDoDaoMySqlImpl implements ToDoDao{
     private static Connection conn;
 
@@ -44,10 +44,10 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
 
         while(rs.next()){
             Task t = new Task(
-                rs.getString("task_name"),
-                rs.getInt("task_id"),
-                rs.getDate("task_deadLine").toLocalDate(),
-                rs.getBoolean("task_isDone")
+                    rs.getString("task_name"),
+                    rs.getInt("task_id"),
+                    rs.getDate("task_deadLine").toLocalDate(),
+                    rs.getBoolean("task_isDone")
             );
             tasksList.add(t);
         }

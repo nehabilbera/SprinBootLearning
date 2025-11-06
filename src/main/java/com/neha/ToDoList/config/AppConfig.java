@@ -15,28 +15,25 @@ import java.sql.SQLException;
 
 @Configuration
 public class AppConfig {
+    @Primary
     @Bean
-    public ToDoService ToDoServiceListImpl() {
+    public ToDoDao toDoDao() throws SQLException {
+        return new ToDoDaoMySqlImpl();
+    }
+
+    @Bean
+    @Primary
+    public ToDoService toDoService(ToDoDao toDoDao) throws SQLException {
+        return new ToDoServiceDaoImpl(toDoDao);
+    }
+
+    @Bean
+    public ToDoService toDoService1(){
         return new ToDoServiceListImpl();
     }
 
     @Bean
-    public ToDoService ToDoServiceMapImpl() {
+    public ToDoService toDoService2(){
         return new ToDoServiceMapImpl();
-    }
-
-    @Primary
-    @Bean
-    public ToDoService ToDoServiceDaoImpl() throws SQLException {
-        return new ToDoServiceDaoImpl();
-    }
-
-
-
-
-    @Primary
-    @Bean
-    public ToDoDao ToDoDaoMySqlImpl() throws SQLException {
-        return new ToDoDaoMySqlImpl();
     }
 }

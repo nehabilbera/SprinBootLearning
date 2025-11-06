@@ -1,7 +1,6 @@
 package com.neha.ToDoList.service;
 
 import com.neha.ToDoList.dao.ToDoDao;
-import com.neha.ToDoList.dao.ToDoDaoMySqlImpl;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -12,16 +11,17 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-@Configuration
+
 public class ToDoServiceDaoImpl implements ToDoService{
 
-    private ToDoDao toDoDao;
+    private final ToDoDao toDoDao;
 
-    @Autowired
-    public ToDoServiceDaoImpl() throws SQLException {
+    public ToDoServiceDaoImpl(ToDoDao toDoDao) {
+        this.toDoDao = toDoDao;
         System.out.println("DAO Service called.");
-        this.toDoDao = new ToDoDaoMySqlImpl();
     }
+
+
 
     @Override
     public List<Task> getTaskLists() throws SQLException {

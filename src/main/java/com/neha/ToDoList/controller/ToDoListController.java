@@ -6,10 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.neha.ToDoList.service.ToDoService;
-import com.neha.ToDoList.service.ToDoServiceDaoImpl;
-import com.neha.ToDoList.service.ToDoServiceListImpl;
-import com.neha.ToDoList.service.ToDoServiceMapImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +21,7 @@ public class ToDoListController {
 
     private final ToDoService toDoService;
 
-    public ToDoListController(ToDoService toDoService) throws SQLException{
+    public ToDoListController(ToDoService toDoService) {
         this.toDoService=toDoService;
     }
 
