@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.neha.ToDoList.utils.DateMethods.compareDate;
 
 
 public class ToDoDaoMySqlImpl implements ToDoDao{
@@ -207,7 +206,6 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
 
     @Override
     public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException {
-        //todo : add param conditions
         List<Task> filteredTasks = new ArrayList<>();
 
 
