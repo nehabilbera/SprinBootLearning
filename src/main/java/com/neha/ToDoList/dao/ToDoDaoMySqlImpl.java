@@ -1,5 +1,6 @@
 package com.neha.ToDoList.dao;
 
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -23,7 +24,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                     "CREATE TABLE IF NOT EXISTS tasks (" +
                             "task_id INT AUTO_INCREMENT PRIMARY KEY, " +
                             "task_name VARCHAR(255), " +
-                            "task_deadLine DATE, " +
+                            "task_deadline DATE, " +
                             "task_isDone BOOLEAN" +
                             ")"
             );
@@ -43,7 +44,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             Task t = new Task(
                 rs.getString("task_name"),
                 rs.getInt("task_id"),
-                rs.getDate("task_deadLine").toLocalDate(),
+                rs.getDate("task_deadline").toLocalDate(),
                 rs.getBoolean("task_isDone")
             );
             tasksList.add(t);
@@ -56,13 +57,13 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         for(Task t : new_tasks){
             String name = t.getName();
             int id = t.getId();
-            LocalDate deadLine = t.getDeadline();
+            LocalDate deadline = t.getdeadline();
             Boolean isDone = t.getIsDone();
-            String query = "INSERT INTO tasks (task_id, task_name, task_deadLine, task_isDone) VALUES(?,?,?,?)";
+            String query = "INSERT INTO tasks (task_id, task_name, task_deadline, task_isDone) VALUES(?,?,?,?)";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setInt(1,id);
             ptst.setString(2,name);
-            ptst.setDate(3, Date.valueOf(deadLine));
+            ptst.setDate(3, Date.valueOf(deadline));
             ptst.setBoolean(4, isDone);
             ptst.executeUpdate();
         }
@@ -78,7 +79,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         if(rs.next()){
             t.setName(rs.getString("task_name"));
             t.setId(rs.getInt("task_id"));
-            t.setDeadline(rs.getDate("task_deadLine").toLocalDate());
+            t.setdeadline(rs.getDate("task_deadline").toLocalDate());
             t.setIsDone(rs.getBoolean("task_isDone"));
         }
         else{
@@ -109,11 +110,11 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             psts.setInt(2,id);
             psts.executeUpdate();
         }
-        if(updatedTask.getDeadline()!=null){
-            String query = "UPDATE tasks SET task_deadLine=? WHERE task_id=?";
+        if(updatedTask.getdeadline()!=null){
+            String query = "UPDATE tasks SET task_deadline=? WHERE task_id=?";
             PreparedStatement psts = conn.prepareStatement(query);
-            psts.setDate(1, Date.valueOf(updatedTask.getDeadline()));
-            utask.setDeadline(updatedTask.getDeadline());
+            psts.setDate(1, Date.valueOf(updatedTask.getdeadline()));
+            utask.setdeadline(updatedTask.getdeadline());
             psts.setInt(2,id);
             psts.executeUpdate();
         }
@@ -162,7 +163,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             Task t = new Task(
                     rs.getString("task_name"),
                     rs.getInt("task_id"),
-                    rs.getDate("task_deadLine").toLocalDate(),
+                    rs.getDate("task_deadline").toLocalDate(),
                     rs.getBoolean("task_isDone")
             );
             serachedTasks.add(t);
@@ -172,16 +173,20 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
 
     // todo: make it work for field = name and field = deadline, do not touch input data
     @Override
-    public List<Task> sort(String field, int desc) throws SQLException {
+    public List<Task> sort(String field, int desc) throws SQLException, InvalidParams {
         // todo : add check condition of field and desc
+        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
+
         List<Task> sortedTasks = new ArrayList<>();
-        if (!field.equals("name") && !field.equals("deadLine")) {
-            field = "deadLine";
+        if (!field.equals("name") && !field.equals("deadline")) {
+            field = "deadline";
         }
+
+        String field_name = (field == "name") ? "task_name" : "deadline";
 
         String direction = (desc == 1) ? "DESC" : "ASC";
 
-        String query = "SELECT * FROM tasks ORDER BY " + field + " " + direction;
+        String query = "SELECT * FROM tasks ORDER BY " + field_name + " " + direction;
 
         PreparedStatement ptst = conn.prepareStatement(query);
 
@@ -191,7 +196,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             Task t = new Task(
                     rs.getString("task_name"),
                     rs.getInt("task_id"),
-                    rs.getDate("task_deadLine").toLocalDate(),
+                    rs.getDate("task_deadline").toLocalDate(),
                     rs.getBoolean("task_isDone")
             );
             sortedTasks.add(t);
@@ -200,12 +205,12 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
     }
 
     @Override
-    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException {
+    public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException {
         //todo : add param conditions
         List<Task> filteredTasks = new ArrayList<>();
 
 
-        if(name!=null && deadLine==null && isDone==null){
+        if(name!=null && deadline==null && isDone==null){
             String query = "SELECT * FROM tasks WHERE task_name LIKE ?";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setString(1, "%" + name + "%");
@@ -215,29 +220,29 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name==null && deadLine!=null && isDone==null){
-            String query = "SELECT * FROM tasks WHERE task_deadLine = ?";
+        else if(name==null && deadline!=null && isDone==null){
+            String query = "SELECT * FROM tasks WHERE task_deadline = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
-            ptst.setDate(1, Date.valueOf(deadLine));
+            ptst.setDate(1, Date.valueOf(deadline));
             ResultSet rs = ptst.executeQuery();
 
             while(rs.next()){
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name==null && deadLine==null && isDone!=null){
+        else if(name==null && deadline==null && isDone!=null){
             String query = "SELECT * FROM tasks WHERE task_isDone = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setBoolean(1, isDone);
@@ -247,30 +252,30 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name!=null && deadLine!=null && isDone==null){
-            String query = "SELECT * FROM tasks WHERE task_name LIKE ? AND task_deadLine = ?";
+        else if(name!=null && deadline!=null && isDone==null){
+            String query = "SELECT * FROM tasks WHERE task_name LIKE ? AND task_deadline = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setString(1, "%" + name + "%");
-            ptst.setDate(2, Date.valueOf(deadLine));
+            ptst.setDate(2, Date.valueOf(deadline));
             ResultSet rs = ptst.executeQuery();
 
             while(rs.next()){
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name!=null && deadLine==null && isDone!=null){
+        else if(name!=null && deadline==null && isDone!=null){
             String query = "SELECT * FROM tasks WHERE task_name LIKE ? AND task_isDone = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setString(1, "%" + name + "%");
@@ -281,16 +286,16 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name==null && deadLine!=null && isDone!=null){
-            String query = "SELECT * FROM tasks WHERE task_deadLine = ? AND task_isDone = ?";
+        else if(name==null && deadline!=null && isDone!=null){
+            String query = "SELECT * FROM tasks WHERE task_deadline = ? AND task_isDone = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
-            ptst.setString(1, String.valueOf(deadLine));
+            ptst.setString(1, String.valueOf(deadline));
             ptst.setBoolean(2, isDone);
             ResultSet rs = ptst.executeQuery();
 
@@ -298,17 +303,17 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);
             }
         }
-        else if(name!=null && deadLine!=null && isDone!=null){
-            String query = "SELECT * FROM tasks WHERE task_name LIKE ? AND task_deadLine = ? AND task_isDone = ?";
+        else if(name!=null && deadline!=null && isDone!=null){
+            String query = "SELECT * FROM tasks WHERE task_name LIKE ? AND task_deadline = ? AND task_isDone = ?";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setString(1, "%" + name + "%");
-            ptst.setDate(2, Date.valueOf(deadLine));
+            ptst.setDate(2, Date.valueOf(deadline));
             ptst.setBoolean(3, isDone);
             ResultSet rs = ptst.executeQuery();
 
@@ -316,7 +321,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
                 Task t = new Task(
                         rs.getString("task_name"),
                         rs.getInt("task_id"),
-                        rs.getDate("task_deadLine").toLocalDate(),
+                        rs.getDate("task_deadline").toLocalDate(),
                         rs.getBoolean("task_isDone")
                 );
                 filteredTasks.add(t);

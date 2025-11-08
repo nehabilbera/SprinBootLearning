@@ -1,5 +1,6 @@
 package com.neha.ToDoList.dao;
 
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -24,7 +25,7 @@ public interface ToDoDao {
 
      List<Task> search(String name) throws SQLException;
 
-     List<Task> sort(String field, int desc) throws SQLException;
+     List<Task> sort(String field, int desc) throws SQLException, InvalidParams;
 
-     List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException;
+     List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException;
 }

@@ -2,6 +2,7 @@ package com.neha.ToDoList.service;
 
 import com.neha.ToDoList.dao.ToDoDao;
 import com.neha.ToDoList.dao.ToDoDaoMySqlImpl;
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -55,14 +56,14 @@ public class ToDoServiceDaoImpl implements ToDoService{
     }
 
     @Override
-    public List<Task> sort(String field, int desc) throws SQLException {
-        // todo : add field condition
+    public List<Task> sort(String field, int desc) throws SQLException, InvalidParams {
+        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
         return toDoDao.sort(field, desc);
     }
 
     @Override
-    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException {
+    public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException {
         //todo : add param conditions
-        return toDoDao.filter(name, deadLine, isDone);
+        return toDoDao.filter(name, deadline, isDone);
     }
 }

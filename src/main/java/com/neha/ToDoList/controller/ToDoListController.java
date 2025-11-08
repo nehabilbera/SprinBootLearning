@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.service.ToDoService;
 import com.neha.ToDoList.service.ToDoServiceDaoImpl;
 import com.neha.ToDoList.service.ToDoServiceListImpl;
@@ -87,16 +88,16 @@ public class ToDoListController {
 
     // todo: validate fields and request params
     @GetMapping("/sort")
-    public ApiResponse<List<Task>> sort(@RequestParam(required = false, defaultValue = "deadLine") String field, @RequestParam(required = false, defaultValue = "0") int desc) throws SQLException {
-        // todo: add custom exc. invalid parameters
+    public ApiResponse<List<Task>> sort(@RequestParam(required = false, defaultValue = "deadline") String field, @RequestParam(required = false, defaultValue = "0") int desc) throws SQLException, InvalidParams {
+        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
         return ApiResponse.success(toDoService.sort(field, desc), "Tasks sort Successfully");
     }
 
     @GetMapping("/filter")
     public ApiResponse<List<Task>> filter(@RequestParam(required = false) String name,
-                                          @RequestParam(required = false) LocalDate deadLine,
+                                          @RequestParam(required = false) LocalDate deadline,
                                           @RequestParam(required = false) Boolean isDone) throws SQLException, TaskNotFoundException {
         //todo : add param conditions
-        return ApiResponse.success(toDoService.filter(name, deadLine, isDone), "Get filtered tasks successfully");
+        return ApiResponse.success(toDoService.filter(name, deadline, isDone), "Get filtered tasks successfully");
     }
 }
