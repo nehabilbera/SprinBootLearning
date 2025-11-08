@@ -171,44 +171,42 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         return serachedTasks;
     }
 
-    // todo: make it work for field = name and field = deadline, do not touch input data
-    @Override
+   @Override
     public List<Task> sort(String field, int desc) throws SQLException, InvalidParams {
-        // todo : add check condition of field and desc
-        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
+        System.out.println("DAO");
 
-        List<Task> sortedTasks = new ArrayList<>();
-        if (!field.equals("name") && !field.equals("deadline")) {
-            field = "deadline";
+        if(("deadline".equals(field) || "name".equals(field)) && (desc==0 || desc==1)){
+            List<Task> sortedTasks = new ArrayList<>();
+
+            if("name".equals(field)) field="task_name";
+            else field="task_deadline";
+
+            String direction = (desc == 1) ? "DESC" : "ASC";
+
+            String query = "SELECT * FROM tasks ORDER BY " + field + " " + direction;
+
+            PreparedStatement ptst = conn.prepareStatement(query);
+
+            ResultSet rs = ptst.executeQuery();
+
+            while(rs.next()){
+                Task t = new Task(
+                        rs.getString("task_name"),
+                        rs.getInt("task_id"),
+                        rs.getDate("task_deadline").toLocalDate(),
+                        rs.getBoolean("task_isDone")
+                );
+                sortedTasks.add(t);
+            }
+            return sortedTasks;
         }
-
-        String field_name = (field == "name") ? "task_name" : "deadline";
-
-        String direction = (desc == 1) ? "DESC" : "ASC";
-
-        String query = "SELECT * FROM tasks ORDER BY " + field_name + " " + direction;
-
-        PreparedStatement ptst = conn.prepareStatement(query);
-
-        ResultSet rs = ptst.executeQuery();
-
-        while(rs.next()){
-            Task t = new Task(
-                    rs.getString("task_name"),
-                    rs.getInt("task_id"),
-                    rs.getDate("task_deadline").toLocalDate(),
-                    rs.getBoolean("task_isDone")
-            );
-            sortedTasks.add(t);
-        }
-        return sortedTasks;
+        else throw new InvalidParams("Invalid Parameters");
     }
 
     @Override
     public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException {
         //todo : add param conditions
         List<Task> filteredTasks = new ArrayList<>();
-
 
         if(name!=null && deadline==null && isDone==null){
             String query = "SELECT * FROM tasks WHERE task_name LIKE ?";

@@ -1,5 +1,7 @@
 package com.neha.ToDoList.service;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -161,28 +163,35 @@ public class ToDoServiceListImpl implements ToDoService{
 
     @Override
     public List<Task> sort(String field, int desc) throws InvalidParams {
-        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
-        List<Task> sortedTasks = new ArrayList<>(tasks);
-        if(Objects.equals(field, "deadline")){
-            if(desc==0) {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline));
-                return sortedTasks;
+
+        if(("deadline".equals(field) || "name".equals(field)) && (desc==0 || desc==1)){
+            List<Task> sortedTasks = new ArrayList<>(tasks);
+            if(Objects.equals(field, "deadline")){
+                if(desc==0) {
+                    sortedTasks.sort(Comparator.comparing(Task::getdeadline));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getdeadline).reversed());
+                    return sortedTasks;
+                }
             }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline).reversed());
-                return sortedTasks;
+            else{
+                if(desc==0){
+                    sortedTasks.sort(Comparator.comparing(Task::getName));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
+                    return sortedTasks;
+                }
             }
         }
-        else{
-            if(desc==0){
-                sortedTasks.sort(Comparator.comparing(Task::getName));
-                return sortedTasks;
-            }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
-                return sortedTasks;
-            }
+        else {
+            System.out.println("Failed in services");
+            throw new InvalidParams("Invalid Parameters");
         }
+
     }
 
     @Override

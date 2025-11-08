@@ -111,28 +111,30 @@ public class ToDoServiceMapImpl implements ToDoService {
 
     @Override
     public List<Task> sort(String field, int desc) throws InvalidParams {
-        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
-        List<Task> sortedTasks = new ArrayList<>(tasks.values());
-        if(field.equals("deadline")){
-            if(desc==0) {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline));
-                return sortedTasks;
+        if((field=="deadline" || field=="name") && (desc==0 || desc==1)){
+            List<Task> sortedTasks = new ArrayList<>(tasks.values());
+            if(field.equals("deadline")){
+                if(desc==0) {
+                    sortedTasks.sort(Comparator.comparing(Task::getdeadline));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getdeadline).reversed());
+                    return sortedTasks;
+                }
             }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline).reversed());
-                return sortedTasks;
+            else{
+                if(desc==0){
+                    sortedTasks.sort(Comparator.comparing(Task::getName));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
+                    return sortedTasks;
+                }
             }
         }
-        else{
-            if(desc==0){
-                sortedTasks.sort(Comparator.comparing(Task::getName));
-                return sortedTasks;
-            }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
-                return sortedTasks;
-            }
-        }
+        else throw new InvalidParams("Invalid Parameters");
     }
 
     @Override

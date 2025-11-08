@@ -86,18 +86,24 @@ public class ToDoListController {
         return ApiResponse.success(toDoService.search(name), "Retrieved searched tasks successfully");
     }
 
-    // todo: validate fields and request params
+
     @GetMapping("/sort")
     public ApiResponse<List<Task>> sort(@RequestParam(required = false, defaultValue = "deadline") String field, @RequestParam(required = false, defaultValue = "0") int desc) throws SQLException, InvalidParams {
-        if(field!="deadline" && field!="name") throw new InvalidParams("Invalid parameters");
-        return ApiResponse.success(toDoService.sort(field, desc), "Tasks sort Successfully");
+        System.out.println("Controller"+field+desc);
+        if(("deadline".equals(field) || "name".equals(field)) && (desc==0 || desc==1)){
+            System.out.println("Called services");
+            return ApiResponse.success(toDoService.sort(field, desc), "Tasks sort Successfully");
+        }
+        else {
+            System.out.println("Failed");
+            throw new InvalidParams("Invalid parameters");
+        }
     }
 
     @GetMapping("/filter")
     public ApiResponse<List<Task>> filter(@RequestParam(required = false) String name,
                                           @RequestParam(required = false) LocalDate deadline,
                                           @RequestParam(required = false) Boolean isDone) throws SQLException, TaskNotFoundException {
-        //todo : add param conditions
         return ApiResponse.success(toDoService.filter(name, deadline, isDone), "Get filtered tasks successfully");
     }
 }
