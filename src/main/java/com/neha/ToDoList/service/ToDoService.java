@@ -27,5 +27,5 @@ public interface ToDoService{
 
     public List<Task> sort(String field, int desc) throws SQLException;
 
-    public List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException;
+    public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException;
 }

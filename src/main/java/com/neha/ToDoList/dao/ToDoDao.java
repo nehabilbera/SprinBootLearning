@@ -26,5 +26,5 @@ public interface ToDoDao {
 
      List<Task> sort(String field, int desc) throws SQLException;
 
-     List<Task> filter(String name, LocalDate deadLine, Boolean isDone) throws SQLException, TaskNotFoundException;
+     List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException;
 }
