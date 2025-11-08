@@ -2,6 +2,7 @@
 package com.neha.ToDoList.dao;
 
 import com.neha.ToDoList.config.EnvVars;
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -61,7 +62,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         for(Task t : new_tasks){
             String name = t.getName();
             int id = t.getId();
-            LocalDate deadline = t.getdeadline();
+            LocalDate deadline = t.getDeadline();
             Boolean isDone = t.getIsDone();
             String query = "INSERT INTO tasks (task_id, task_name, task_deadline, task_isDone) VALUES(?,?,?,?)";
             PreparedStatement ptst = conn.prepareStatement(query);
@@ -83,7 +84,7 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         if(rs.next()){
             t.setName(rs.getString("task_name"));
             t.setId(rs.getInt("task_id"));
-            t.setdeadline(rs.getDate("task_deadline").toLocalDate());
+            t.setDeadline(rs.getDate("task_deadline").toLocalDate());
             t.setIsDone(rs.getBoolean("task_isDone"));
         }
         else{
@@ -114,11 +115,11 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
             psts.setInt(2,id);
             psts.executeUpdate();
         }
-        if(updatedTask.getdeadline()!=null){
+        if(updatedTask.getDeadline()!=null){
             String query = "UPDATE tasks SET task_deadline=? WHERE task_id=?";
             PreparedStatement psts = conn.prepareStatement(query);
-            psts.setDate(1, Date.valueOf(updatedTask.getdeadline()));
-            utask.setdeadline(updatedTask.getdeadline());
+            psts.setDate(1, Date.valueOf(updatedTask.getDeadline()));
+            utask.setDeadline(updatedTask.getDeadline());
             psts.setInt(2,id);
             psts.executeUpdate();
         }
@@ -175,39 +176,42 @@ public class ToDoDaoMySqlImpl implements ToDoDao{
         return serachedTasks;
     }
 
-    // todo: make it work for field = name and field = deadline, do not touch input data
     @Override
-    public List<Task> sort(String field, int desc) throws SQLException {
-        // todo : add check condition of field and desc
-        List<Task> sortedTasks = new ArrayList<>();
-        if (!field.equals("name") && !field.equals("deadline")) {
-            field = "deadline";
+    public List<Task> sort(String field, int desc) throws SQLException, InvalidParams {
+        System.out.println("DAO");
+
+        if(("deadline".equals(field) || "name".equals(field)) && (desc==0 || desc==1)){
+            List<Task> sortedTasks = new ArrayList<>();
+
+            if("name".equals(field)) field="task_name";
+            else field="task_deadline";
+
+            String direction = (desc == 1) ? "DESC" : "ASC";
+
+            String query = "SELECT * FROM tasks ORDER BY " + field + " " + direction;
+
+            PreparedStatement ptst = conn.prepareStatement(query);
+
+            ResultSet rs = ptst.executeQuery();
+
+            while(rs.next()){
+                Task t = new Task(
+                        rs.getString("task_name"),
+                        rs.getInt("task_id"),
+                        rs.getDate("task_deadline").toLocalDate(),
+                        rs.getBoolean("task_isDone")
+                );
+                sortedTasks.add(t);
+            }
+            return sortedTasks;
         }
-
-        String direction = (desc == 1) ? "DESC" : "ASC";
-
-        String query = "SELECT * FROM tasks ORDER BY " + field + " " + direction;
-
-        PreparedStatement ptst = conn.prepareStatement(query);
-
-        ResultSet rs = ptst.executeQuery();
-
-        while(rs.next()){
-            Task t = new Task(
-                    rs.getString("task_name"),
-                    rs.getInt("task_id"),
-                    rs.getDate("task_deadline").toLocalDate(),
-                    rs.getBoolean("task_isDone")
-            );
-            sortedTasks.add(t);
-        }
-        return sortedTasks;
+        else throw new InvalidParams("Invalid Parameters");
     }
 
     @Override
     public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException {
+        //todo : add param conditions
         List<Task> filteredTasks = new ArrayList<>();
-
 
         if(name!=null && deadline==null && isDone==null){
             String query = "SELECT * FROM tasks WHERE task_name LIKE ?";

@@ -46,11 +46,11 @@ public class Task {
         this.id = id;
     }
 
-    public LocalDate getdeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setdeadline(LocalDate deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 

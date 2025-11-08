@@ -1,5 +1,6 @@
 package com.neha.ToDoList.service;
 
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -25,7 +26,7 @@ public interface ToDoService{
 
     public List<Task> search(String name) throws SQLException;
 
-    public List<Task> sort(String field, int desc) throws SQLException;
+    public List<Task> sort(String field, int desc) throws SQLException, InvalidParams;
 
     public List<Task> filter(String name, LocalDate deadline, Boolean isDone) throws SQLException, TaskNotFoundException;
 }

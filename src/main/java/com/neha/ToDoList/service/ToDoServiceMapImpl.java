@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.neha.ToDoList.exception.InvalidParams;
 import com.neha.ToDoList.exception.InvalidTaskException;
 import com.neha.ToDoList.exception.TaskNotFoundException;
 import com.neha.ToDoList.model.Task;
@@ -33,7 +34,7 @@ public class ToDoServiceMapImpl implements ToDoService {
     public List<Task> addBatchTask(List<Task> new_tasks){
         for(Task t : new_tasks){
             int id = ++count;
-            Task newTask = new Task(t.getName(), id, t.getdeadline(), t.getIsDone());
+            Task newTask = new Task(t.getName(), id, t.getDeadline(), t.getIsDone());
             tasks.put(id,newTask);
         }
 
@@ -78,7 +79,7 @@ public class ToDoServiceMapImpl implements ToDoService {
         }
 
         if(updatedTask.getName() != null) newTask.setName(updatedTask.getName());
-        if(updatedTask.getdeadline() != null) newTask.setdeadline(updatedTask.getdeadline());
+        if(updatedTask.getDeadline() != null) newTask.setDeadline(updatedTask.getDeadline());
         if(updatedTask.getIsDone() != null) newTask.setIsDone(updatedTask.getIsDone());
         tasks.put(id, newTask);
         return newTask;
@@ -97,7 +98,7 @@ public class ToDoServiceMapImpl implements ToDoService {
                 throw new TaskNotFoundException("Task not found");
             }
             if (t.getName() != null) newTask.setName(t.getName());
-            if (t.getdeadline() != null) newTask.setdeadline(t.getdeadline());
+            if (t.getDeadline() != null) newTask.setDeadline(t.getDeadline());
             if (t.getIsDone() != null) newTask.setIsDone(t.getIsDone());
             tasks.put(id, newTask);
         }
@@ -112,28 +113,31 @@ public class ToDoServiceMapImpl implements ToDoService {
     }
 
     @Override
-    public List<Task> sort(String field, int desc){
-        List<Task> sortedTasks = new ArrayList<>(tasks.values());
-        if(field.equals("deadline")){
-            if(desc==0) {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline));
-                return sortedTasks;
+    public List<Task> sort(String field, int desc) throws InvalidParams {
+        if((field=="deadline" || field=="name") && (desc==0 || desc==1)){
+            List<Task> sortedTasks = new ArrayList<>(tasks.values());
+            if(field.equals("deadline")){
+                if(desc==0) {
+                    sortedTasks.sort(Comparator.comparing(Task::getDeadline));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getDeadline).reversed());
+                    return sortedTasks;
+                }
             }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getdeadline).reversed());
-                return sortedTasks;
+            else{
+                if(desc==0){
+                    sortedTasks.sort(Comparator.comparing(Task::getName));
+                    return sortedTasks;
+                }
+                else {
+                    sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
+                    return sortedTasks;
+                }
             }
         }
-        else{
-            if(desc==0){
-                sortedTasks.sort(Comparator.comparing(Task::getName));
-                return sortedTasks;
-            }
-            else {
-                sortedTasks.sort(Comparator.comparing(Task::getName).reversed());
-                return sortedTasks;
-            }
-        }
+        else throw new InvalidParams("Invalid Parameters");
     }
 
     @Override
@@ -141,7 +145,7 @@ public class ToDoServiceMapImpl implements ToDoService {
         List<Task> filteredTasks = new ArrayList<>();
         for(Task t : tasks.values()){
             Boolean namePart = (name==null) || (t.getName().trim().toLowerCase().contains(name.toLowerCase().trim()));
-            Boolean deadlinePart = (deadline==null) || compareDate(t.getdeadline(), deadline);
+            Boolean deadlinePart = (deadline==null) || compareDate(t.getDeadline(), deadline);
             Boolean isDonePart = (isDone==null) || (t.getIsDone().equals(isDone));
 
             if(namePart && deadlinePart && isDonePart){

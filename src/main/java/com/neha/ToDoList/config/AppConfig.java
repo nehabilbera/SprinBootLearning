@@ -1,6 +1,5 @@
 package com.neha.ToDoList.config;
 
-import com.neha.ToDoList.controller.ToDoListController;
 import com.neha.ToDoList.dao.ToDoDao;
 import com.neha.ToDoList.dao.ToDoDaoMySqlImpl;
 import com.neha.ToDoList.service.ToDoService;
